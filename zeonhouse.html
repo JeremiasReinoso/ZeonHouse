@@ -1,0 +1,1024 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Zeon House</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --cream:#f5f0e8;
+  --cream-dark:#ede7d9;
+  --ink:#141210;
+  --ink-light:#3a3530;
+  --stone:#8a8278;
+  --stone-light:#b5b0a8;
+  --copper:#a07850;
+  --copper-light:#c49a6c;
+  --white:#fdfcfa;
+}
+html{scroll-behavior:smooth;font-size:16px}
+body{
+  background:var(--cream);
+  color:var(--ink);
+  font-family:'Montserrat',sans-serif;
+  font-weight:300;
+  overflow-x:hidden;
+  cursor:none;
+}
+
+/* ── CURSOR ── */
+#cur{
+  width:8px;height:8px;
+  background:var(--ink);
+  border-radius:50%;
+  position:fixed;z-index:9999;
+  pointer-events:none;
+  transform:translate(-50%,-50%);
+  mix-blend-mode:multiply;
+  transition:transform .15s,width .3s,height .3s,background .3s;
+}
+#cur.big{width:48px;height:48px;background:rgba(160,120,80,.18)}
+#curt{
+  width:1px;height:1px;
+  position:fixed;z-index:9998;
+  pointer-events:none;
+  transform:translate(-50%,-50%);
+}
+
+/* ── NAV ── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:32px 64px;
+  transition:padding .5s,background .5s,border-color .5s;
+  border-bottom:1px solid transparent;
+}
+nav.stuck{
+  padding:20px 64px;
+  background:rgba(245,240,232,.94);
+  backdrop-filter:blur(16px);
+  border-bottom-color:rgba(138,130,120,.18);
+}
+.nav-wordmark{
+  font-family:'Cormorant Garamond',serif;
+  font-size:22px;font-weight:400;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  color:var(--ink);
+  text-decoration:none;
+}
+.nav-wordmark em{font-style:normal;color:var(--copper)}
+.nav-menu{display:flex;gap:48px;list-style:none}
+.nav-menu a{
+  font-size:10px;font-weight:400;
+  letter-spacing:.22em;text-transform:uppercase;
+  color:var(--stone);text-decoration:none;
+  transition:color .3s;
+}
+.nav-menu a:hover{color:var(--ink)}
+.nav-cta{
+  font-size:10px;font-weight:400;
+  letter-spacing:.2em;text-transform:uppercase;
+  color:var(--white);background:var(--ink);
+  text-decoration:none;
+  padding:12px 28px;
+  transition:background .3s;
+}
+.nav-cta:hover{background:var(--copper)}
+
+/* ── HERO ── */
+.hero{
+  height:100vh;min-height:700px;
+  display:grid;grid-template-columns:1fr 1fr;
+  position:relative;overflow:hidden;
+}
+.hero-img-col{position:relative;overflow:hidden}
+.hero-img-col img{
+  width:100%;height:100%;object-fit:cover;
+  transform:scale(1.04);
+  animation:zoomSlow 14s ease-in-out infinite alternate;
+}
+.hero-img-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(to right,var(--cream) 0%,transparent 30%);
+}
+.hero-text-col{
+  display:flex;flex-direction:column;
+  justify-content:center;
+  padding:140px 80px 100px 72px;
+  background:var(--cream);
+  position:relative;z-index:2;
+}
+.hero-label{
+  font-size:10px;font-weight:400;
+  letter-spacing:.28em;text-transform:uppercase;
+  color:var(--copper);margin-bottom:36px;
+  opacity:0;animation:up .8s .2s forwards;
+  display:flex;align-items:center;gap:16px;
+}
+.hero-label::before{content:'';display:block;width:40px;height:1px;background:var(--copper)}
+.hero-h1{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(56px,6vw,90px);
+  font-weight:300;line-height:1.05;
+  color:var(--ink);margin-bottom:36px;
+  opacity:0;animation:up .9s .4s forwards;
+}
+.hero-h1 i{font-style:italic;color:var(--copper-light)}
+.hero-sub{
+  font-size:13px;font-weight:300;line-height:1.9;
+  color:var(--stone);max-width:360px;
+  margin-bottom:56px;
+  opacity:0;animation:up .9s .6s forwards;
+}
+.hero-actions{
+  display:flex;align-items:center;gap:40px;
+  opacity:0;animation:up .9s .8s forwards;
+}
+.btn-dark{
+  display:inline-block;padding:16px 44px;
+  background:var(--ink);color:var(--cream);
+  font-size:10px;font-weight:400;letter-spacing:.2em;
+  text-transform:uppercase;text-decoration:none;
+  transition:background .35s;
+}
+.btn-dark:hover{background:var(--copper)}
+.btn-text{
+  font-size:11px;font-weight:400;letter-spacing:.15em;
+  text-transform:uppercase;color:var(--stone);
+  text-decoration:none;
+  display:flex;align-items:center;gap:10px;
+  transition:color .3s;
+}
+.btn-text svg{transition:transform .3s}
+.btn-text:hover{color:var(--ink)}
+.btn-text:hover svg{transform:translateX(5px)}
+.hero-counter{
+  position:absolute;right:48px;bottom:64px;
+  display:flex;flex-direction:column;gap:28px;
+  opacity:0;animation:up .9s 1s forwards;
+}
+.counter-item{text-align:right}
+.counter-n{
+  font-family:'Cormorant Garamond',serif;
+  font-size:44px;font-weight:300;color:var(--ink);
+  line-height:1;
+}
+.counter-l{
+  font-size:9px;font-weight:400;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--stone);
+  margin-top:3px;
+}
+
+/* ── TICKER ── */
+.ticker{
+  background:var(--ink);padding:14px 0;overflow:hidden;
+}
+.ticker-inner{
+  display:inline-flex;white-space:nowrap;
+  animation:tick 28s linear infinite;
+}
+.ticker-item{
+  font-family:'Cormorant Garamond',serif;
+  font-size:16px;font-weight:300;font-style:italic;
+  color:var(--cream-dark);padding:0 48px;letter-spacing:.05em;
+}
+.ticker-sep{color:var(--copper);padding:0 8px}
+
+/* ── PHILOSOPHY ── */
+.philosophy{
+  display:grid;grid-template-columns:1fr 2fr;
+  gap:0;min-height:520px;
+}
+.phil-left{
+  background:var(--ink);
+  padding:96px 64px;
+  display:flex;flex-direction:column;
+  justify-content:flex-end;
+  position:relative;overflow:hidden;
+}
+.phil-left::after{
+  content:'Z';
+  font-family:'Cormorant Garamond',serif;
+  font-size:320px;font-weight:600;
+  color:rgba(255,255,255,.04);
+  position:absolute;right:-40px;top:-40px;
+  line-height:1;pointer-events:none;
+}
+.phil-tag{
+  font-size:9px;font-weight:400;letter-spacing:.28em;
+  text-transform:uppercase;color:var(--copper);
+  margin-bottom:24px;
+}
+.phil-heading{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(40px,4vw,60px);font-weight:300;
+  color:var(--cream);line-height:1.1;
+}
+.phil-heading em{font-style:italic;color:var(--copper-light)}
+.phil-right{
+  background:var(--cream-dark);
+  padding:96px 80px;
+  display:grid;grid-template-rows:auto 1fr auto;
+  gap:48px;
+}
+.phil-quote{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(20px,2.2vw,28px);
+  font-weight:300;font-style:italic;
+  color:var(--ink-light);line-height:1.65;
+  border-left:2px solid var(--copper);
+  padding-left:32px;
+}
+.phil-body{
+  font-size:13px;font-weight:300;line-height:1.9;
+  color:var(--stone);
+  display:grid;grid-template-columns:1fr 1fr;gap:32px;
+}
+.phil-pillars{
+  display:flex;gap:48px;
+  border-top:1px solid rgba(138,130,120,.25);
+  padding-top:40px;
+}
+.pillar{display:flex;flex-direction:column;gap:6px}
+.pillar-n{
+  font-family:'Cormorant Garamond',serif;
+  font-size:36px;font-weight:300;color:var(--copper);
+  line-height:1;
+}
+.pillar-l{
+  font-size:10px;font-weight:400;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--stone);
+}
+
+/* ── SERVICES ── */
+.services{padding:120px 64px;background:var(--cream)}
+.services-top{
+  display:flex;justify-content:space-between;
+  align-items:flex-end;margin-bottom:80px;
+}
+.section-tag{
+  font-size:9px;font-weight:400;letter-spacing:.28em;
+  text-transform:uppercase;color:var(--copper);
+  margin-bottom:16px;
+  display:flex;align-items:center;gap:14px;
+}
+.section-tag::before{content:'';display:block;width:32px;height:1px;background:var(--copper)}
+.section-h{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(42px,4vw,62px);font-weight:300;
+  color:var(--ink);line-height:1.05;
+}
+.section-h em{font-style:italic;color:var(--copper-light)}
+.services-aside{
+  max-width:260px;text-align:right;
+  font-size:12px;font-weight:300;line-height:1.8;color:var(--stone);
+}
+.svcs-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  border-top:1px solid rgba(138,130,120,.25);
+}
+.svc-item{
+  padding:52px 40px;
+  border-right:1px solid rgba(138,130,120,.2);
+  position:relative;overflow:hidden;
+  transition:background .4s;
+}
+.svc-item:last-child{border-right:none}
+.svc-item::after{
+  content:'';
+  position:absolute;bottom:0;left:0;right:0;
+  height:2px;background:var(--copper);
+  transform:scaleX(0);transform-origin:left;
+  transition:transform .45s cubic-bezier(.4,0,.2,1);
+}
+.svc-item:hover{background:var(--cream-dark)}
+.svc-item:hover::after{transform:scaleX(1)}
+.svc-num{
+  font-family:'Cormorant Garamond',serif;
+  font-size:13px;font-weight:400;
+  color:var(--stone-light);letter-spacing:.1em;
+  margin-bottom:36px;
+}
+.svc-icon{
+  width:36px;height:36px;color:var(--copper);
+  margin-bottom:28px;stroke-width:1.2;
+}
+.svc-name{
+  font-family:'Cormorant Garamond',serif;
+  font-size:26px;font-weight:400;
+  color:var(--ink);margin-bottom:16px;line-height:1.2;
+}
+.svc-desc{
+  font-size:12px;font-weight:300;
+  line-height:1.85;color:var(--stone);
+}
+
+/* ── PROJECTS ── */
+.projects{padding:0 0 120px;background:var(--cream)}
+.proj-intro{
+  display:grid;grid-template-columns:1fr 1fr;
+  padding:80px 64px 64px;gap:40px;
+  border-top:1px solid rgba(138,130,120,.2);
+  align-items:end;
+}
+.proj-filters{
+  display:flex;align-items:center;gap:0;
+  justify-content:flex-end;
+  border:1px solid rgba(138,130,120,.3);
+  align-self:flex-end;width:fit-content;margin-left:auto;
+}
+.pf{
+  font-size:9px;font-weight:400;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--stone);
+  padding:12px 24px;background:transparent;border:none;
+  border-right:1px solid rgba(138,130,120,.3);
+  cursor:none;transition:all .3s;
+  font-family:'Montserrat',sans-serif;
+}
+.pf:last-child{border-right:none}
+.pf.on,.pf:hover{background:var(--ink);color:var(--cream)}
+
+/* Project masonry */
+.proj-main{padding:0 64px;display:flex;flex-direction:column;gap:4px}
+.proj-row{display:grid;gap:4px}
+.proj-row-1{grid-template-columns:3fr 2fr}
+.proj-row-2{grid-template-columns:2fr 3fr}
+.proj-row-3{grid-template-columns:1fr 1fr 1fr}
+
+.proj-card{
+  position:relative;overflow:hidden;
+  background:var(--ink);
+}
+.proj-card.tall{height:560px}
+.proj-card.mid{height:380px}
+.proj-card.short{height:300px}
+.proj-img{
+  width:100%;height:100%;object-fit:cover;
+  transition:transform .75s cubic-bezier(.4,0,.2,1),filter .75s;
+  display:block;filter:brightness(.88) saturate(.85);
+}
+.proj-card:hover .proj-img{transform:scale(1.06);filter:brightness(.75) saturate(1)}
+.proj-meta{
+  position:absolute;
+  bottom:0;left:0;right:0;
+  padding:24px 30px;
+  background:linear-gradient(to top,rgba(0,0,0,.8) 0%,transparent 100%);
+  transform:translateY(6px);
+  opacity:0;transition:all .4s;
+}
+.proj-card:hover .proj-meta{transform:translateY(0);opacity:1}
+.proj-cat{
+  font-size:9px;font-weight:400;letter-spacing:.22em;
+  text-transform:uppercase;color:var(--copper-light);margin-bottom:6px;
+}
+.proj-name{
+  font-family:'Cormorant Garamond',serif;
+  font-size:22px;font-weight:300;color:#fff;margin-bottom:2px;
+}
+.proj-loc{font-size:11px;font-weight:300;color:rgba(255,255,255,.5)}
+.proj-badge{
+  position:absolute;top:20px;right:20px;
+  background:var(--copper);color:#fff;
+  font-size:8px;font-weight:400;letter-spacing:.2em;
+  text-transform:uppercase;padding:6px 14px;
+}
+
+/* ── PROCESS ── */
+.process{
+  background:var(--ink);
+  padding:120px 64px;
+}
+.process-top{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:80px;margin-bottom:96px;align-items:end;
+}
+.process-top .section-h{color:var(--cream)}
+.process-top .section-tag{color:var(--copper)}
+.process-desc{
+  font-size:13px;font-weight:300;line-height:1.9;
+  color:var(--stone);padding-top:16px;
+}
+.steps{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:0;
+  border-top:1px solid rgba(255,255,255,.08);
+}
+.step{
+  padding:48px 40px;
+  border-right:1px solid rgba(255,255,255,.06);
+  transition:background .4s;
+  position:relative;
+}
+.step:last-child{border-right:none}
+.step:hover{background:rgba(255,255,255,.03)}
+.step-n{
+  font-family:'Cormorant Garamond',serif;
+  font-size:72px;font-weight:300;
+  color:rgba(160,120,80,.18);
+  line-height:1;margin-bottom:28px;
+  transition:color .4s;
+}
+.step:hover .step-n{color:rgba(160,120,80,.4)}
+.step-h{
+  font-family:'Cormorant Garamond',serif;
+  font-size:22px;font-weight:400;
+  color:var(--cream);margin-bottom:14px;
+}
+.step-p{
+  font-size:12px;font-weight:300;line-height:1.8;color:var(--stone);
+}
+.step-line{
+  position:absolute;top:0;left:0;right:0;
+  height:2px;background:var(--copper);
+  transform:scaleX(0);transform-origin:left;
+  transition:transform .5s cubic-bezier(.4,0,.2,1);
+}
+.step:hover .step-line{transform:scaleX(1)}
+
+/* ── TESTIMONIAL ── */
+.testimonial{
+  background:var(--cream-dark);
+  padding:100px 64px;
+  display:grid;grid-template-columns:1fr 2fr;gap:80px;align-items:center;
+}
+.test-left .section-tag{margin-bottom:20px}
+.test-left .section-h{font-size:clamp(36px,3.5vw,52px)}
+.test-q{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(22px,2.5vw,34px);
+  font-weight:300;font-style:italic;
+  color:var(--ink);line-height:1.6;
+  margin-bottom:40px;
+}
+.test-q::before{content:'\201C';color:var(--copper);margin-right:4px}
+.test-q::after{content:'\201D';color:var(--copper);margin-left:4px}
+.test-author{
+  display:flex;align-items:center;gap:20px;
+  border-top:1px solid rgba(138,130,120,.25);
+  padding-top:28px;
+}
+.test-avatar{
+  width:52px;height:52px;border-radius:50%;
+  background:var(--stone-light);
+  overflow:hidden;
+}
+.test-avatar img{width:100%;height:100%;object-fit:cover}
+.test-name{
+  font-size:13px;font-weight:400;color:var(--ink);margin-bottom:3px;
+}
+.test-role{
+  font-size:10px;font-weight:300;letter-spacing:.12em;color:var(--stone);
+}
+
+/* ── CONTACT ── */
+.contact{
+  display:grid;grid-template-columns:5fr 7fr;
+  min-height:680px;
+}
+.contact-img{position:relative;overflow:hidden}
+.contact-img img{width:100%;height:100%;object-fit:cover;filter:brightness(.7)}
+.contact-img-text{
+  position:absolute;inset:0;
+  display:flex;flex-direction:column;justify-content:flex-end;
+  padding:64px;
+  background:linear-gradient(to top,rgba(0,0,0,.75) 0%,transparent 50%);
+}
+.contact-img-text h3{
+  font-family:'Cormorant Garamond',serif;
+  font-size:36px;font-weight:300;font-style:italic;
+  color:#fff;line-height:1.3;margin-bottom:28px;
+}
+.contact-detail{
+  display:flex;flex-direction:column;gap:16px;
+}
+.cd{display:flex;gap:16px;align-items:baseline}
+.cd-l{
+  font-size:9px;font-weight:400;letter-spacing:.2em;
+  text-transform:uppercase;color:rgba(255,255,255,.45);
+  min-width:72px;
+}
+.cd-v{font-size:13px;font-weight:300;color:#fff}
+.contact-form{
+  background:var(--ink);
+  padding:80px 72px;
+  display:flex;flex-direction:column;justify-content:center;
+}
+.contact-form .section-tag{color:var(--copper);margin-bottom:16px}
+.contact-form .section-h{color:var(--cream);font-size:42px;margin-bottom:48px}
+.field{margin-bottom:32px}
+.field label{
+  display:block;font-size:9px;font-weight:400;
+  letter-spacing:.22em;text-transform:uppercase;
+  color:var(--stone);margin-bottom:12px;
+}
+.field input,.field textarea,.field select{
+  width:100%;background:transparent;
+  border:none;border-bottom:1px solid rgba(255,255,255,.1);
+  color:var(--cream);font-family:'Montserrat',sans-serif;
+  font-size:14px;font-weight:300;
+  padding:12px 0;outline:none;cursor:none;
+  transition:border-color .3s;
+  -webkit-appearance:none;
+}
+.field input::placeholder,.field textarea::placeholder{color:rgba(255,255,255,.2)}
+.field input:focus,.field textarea:focus{border-bottom-color:var(--copper)}
+.field textarea{resize:none;height:80px}
+.field select{color:rgba(255,255,255,.45);background:transparent}
+.field select option{background:var(--ink);color:var(--cream)}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:32px}
+.form-btn{
+  margin-top:8px;
+  width:100%;padding:18px;
+  background:var(--copper);border:none;
+  color:#fff;font-family:'Montserrat',sans-serif;
+  font-size:10px;font-weight:400;letter-spacing:.22em;
+  text-transform:uppercase;cursor:none;
+  transition:background .35s;
+}
+.form-btn:hover{background:var(--cream);color:var(--ink)}
+
+/* ── FOOTER ── */
+footer{
+  background:var(--cream-dark);
+  padding:64px;
+  display:grid;grid-template-columns:auto 1fr auto;
+  align-items:center;gap:40px;
+  border-top:1px solid rgba(138,130,120,.2);
+}
+.footer-brand{
+  font-family:'Cormorant Garamond',serif;
+  font-size:20px;font-weight:400;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--ink);
+}
+.footer-brand em{font-style:normal;color:var(--copper)}
+.footer-links{
+  display:flex;justify-content:center;gap:48px;list-style:none;
+}
+.footer-links a{
+  font-size:10px;font-weight:400;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--stone);
+  text-decoration:none;transition:color .3s;
+}
+.footer-links a:hover{color:var(--ink)}
+.footer-copy{
+  font-size:10px;font-weight:300;letter-spacing:.08em;
+  color:var(--stone-light);text-align:right;
+}
+
+/* ── ANIMATIONS ── */
+@keyframes up{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+@keyframes zoomSlow{from{transform:scale(1)}to{transform:scale(1.05)}}
+@keyframes tick{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+.fade{opacity:0;transform:translateY(32px);transition:opacity .9s ease,transform .9s ease}
+.fade.in{opacity:1;transform:translateY(0)}
+.fade-d1{transition-delay:.1s}.fade-d2{transition-delay:.2s}
+.fade-d3{transition-delay:.3s}.fade-d4{transition-delay:.4s}
+
+/* ── RESPONSIVE ── */
+@media(max-width:960px){
+  nav{padding:22px 28px}
+  .nav-menu,.nav-cta{display:none}
+  .hero{grid-template-columns:1fr;height:auto}
+  .hero-img-col{height:55vw}
+  .hero-text-col{padding:60px 28px 80px}
+  .hero-counter{right:28px;bottom:32px;flex-direction:row;gap:24px}
+  .counter-item{text-align:left}
+  .philosophy,.contact{grid-template-columns:1fr}
+  .phil-left{padding:64px 36px 56px}
+  .phil-right{padding:64px 36px}
+  .phil-body{grid-template-columns:1fr}
+  .services{padding:80px 28px}
+  .svcs-grid{grid-template-columns:1fr}
+  .svc-item{border-right:none;border-bottom:1px solid rgba(138,130,120,.18)}
+  .proj-intro{grid-template-columns:1fr;padding:60px 28px 40px}
+  .proj-main{padding:0 28px}
+  .proj-row-1,.proj-row-2,.proj-row-3{grid-template-columns:1fr}
+  .proj-card.tall,.proj-card.mid,.proj-card.short{height:260px}
+  .process{padding:80px 28px}
+  .process-top{grid-template-columns:1fr}
+  .steps{grid-template-columns:1fr 1fr}
+  .testimonial{grid-template-columns:1fr;padding:70px 28px;gap:40px}
+  .contact{grid-template-columns:1fr}
+  .contact-img{height:380px}
+  .contact-form{padding:60px 28px}
+  .field-row{grid-template-columns:1fr}
+  footer{grid-template-columns:1fr;text-align:center;padding:40px 28px}
+  .footer-copy{text-align:center}
+}
+</style>
+</head>
+<body>
+
+<div id="cur"></div>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="#" class="nav-wordmark">Zeon <em>House</em></a>
+  <ul class="nav-menu">
+    <li><a href="#nosotros">Filosofía</a></li>
+    <li><a href="#servicios">Servicios</a></li>
+    <li><a href="#proyectos">Proyectos</a></li>
+    <li><a href="#proceso">Proceso</a></li>
+  </ul>
+  <a href="#contacto" class="nav-cta">Contacto</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-text-col">
+    <p class="hero-label">Constructora · Patagonia · Est. 2010</p>
+    <h1 class="hero-h1">Construimos<br>espacios que<br><i>perduran.</i></h1>
+    <p class="hero-sub">Ingeniería de precisión y diseño arquitectónico contemporáneo. Cada proyecto es una declaración de permanencia.</p>
+    <div class="hero-actions">
+      <a href="#proyectos" class="btn-dark">Ver Portfolio</a>
+      <a href="#contacto" class="btn-text">
+        Iniciar proyecto
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </a>
+    </div>
+    <div class="hero-counter">
+      <div class="counter-item">
+        <div class="counter-n">14</div>
+        <div class="counter-l">Años</div>
+      </div>
+      <div class="counter-item">
+        <div class="counter-n">82</div>
+        <div class="counter-l">Obras</div>
+      </div>
+      <div class="counter-item">
+        <div class="counter-n">98<span style="font-size:.55em">%</span></div>
+        <div class="counter-l">Satisfacción</div>
+      </div>
+    </div>
+  </div>
+  <div class="hero-img-col">
+    <img src="https://images.unsplash.com/photo-1464938050520-ef2270bb8ce8?w=1200&q=90&auto=format&fit=crop&crop=center" alt="Arquitectura moderna"/>
+    <div class="hero-img-overlay"></div>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ticker-inner">
+    <span class="ticker-item">Residencial</span><span class="ticker-sep">·</span>
+    <span class="ticker-item">Comercial</span><span class="ticker-sep">·</span>
+    <span class="ticker-item">Industrial</span><span class="ticker-sep">·</span>
+    <span class="ticker-item">Remodelación</span><span class="ticker-sep">·</span>
+    <span class="ticker-item">Ingeniería Estructural</span><span class="ticker-sep">·</span>
+    <span class="ticker-item">Diseño de Interiores</span><span class="ticker-sep">·</span>
+    <span class="ticker-item">Obras Civiles</span><span class="ticker-sep">·</span>
+    <span class="ticker-item">Residencial</span><span class="ticker-sep">·</span>
+    <span class="ticker-item">Comercial</span><span class="ticker-sep">·</span>
+    <span class="ticker-item">Industrial</span><span class="ticker-sep">·</span>
+    <span class="ticker-item">Remodelación</span><span class="ticker-sep">·</span>
+    <span class="ticker-item">Ingeniería Estructural</span><span class="ticker-sep">·</span>
+    <span class="ticker-item">Diseño de Interiores</span><span class="ticker-sep">·</span>
+    <span class="ticker-item">Obras Civiles</span><span class="ticker-sep">·</span>
+  </div>
+</div>
+
+<!-- PHILOSOPHY / NOSOTROS -->
+<section class="philosophy" id="nosotros">
+  <div class="phil-left">
+    <p class="phil-tag fade">Nuestra Filosofía</p>
+    <h2 class="phil-heading fade fade-d1">Más que<br>construir,<br><em>crear</em><br>legado.</h2>
+  </div>
+  <div class="phil-right">
+    <p class="phil-quote fade">
+      "La arquitectura es el testigo más irrefutable de la historia, porque no se puede hablar de lo que nunca existió."
+    </p>
+    <div class="phil-body fade fade-d1">
+      <p>Zeon House nació con una convicción: que cada obra debe ser capaz de resistir el paso del tiempo sin perder relevancia. Combinamos materiales de primera calidad con técnicas constructivas de vanguardia para entregar resultados que superan expectativas.</p>
+      <p>Nuestro equipo multidisciplinario de arquitectos, ingenieros y maestros de obra trabaja de manera integrada, asegurando coherencia desde el primer boceto hasta la entrega de llaves. La atención al detalle no es opcional: es nuestra firma.</p>
+    </div>
+    <div class="phil-pillars fade fade-d2">
+      <div class="pillar">
+        <span class="pillar-n">I.</span>
+        <span class="pillar-l">Calidad</span>
+      </div>
+      <div class="pillar">
+        <span class="pillar-n">II.</span>
+        <span class="pillar-l">Precisión</span>
+      </div>
+      <div class="pillar">
+        <span class="pillar-n">III.</span>
+        <span class="pillar-l">Integridad</span>
+      </div>
+      <div class="pillar">
+        <span class="pillar-n">IV.</span>
+        <span class="pillar-l">Permanencia</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section class="services" id="servicios">
+  <div class="services-top">
+    <div>
+      <p class="section-tag fade">Lo que Hacemos</p>
+      <h2 class="section-h fade fade-d1">Nuestros<br><em>servicios.</em></h2>
+    </div>
+    <p class="services-aside fade fade-d2">Cada proyecto requiere una solución única. Nuestro equipo tiene la experiencia para abordar cualquier escala y complejidad.</p>
+  </div>
+  <div class="svcs-grid">
+    <div class="svc-item fade">
+      <p class="svc-num">01 —</p>
+      <svg class="svc-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor">
+        <path d="M8 40V22L24 8l16 14v18"/><path d="M18 40V28h12v12"/><path d="M4 40h40"/>
+      </svg>
+      <h3 class="svc-name">Construcción Residencial</h3>
+      <p class="svc-desc">Viviendas unifamiliares, dúplex y edificios residenciales construidos con los más altos estándares. Del diseño a la entrega de llaves.</p>
+    </div>
+    <div class="svc-item fade fade-d1">
+      <p class="svc-num">02 —</p>
+      <svg class="svc-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor">
+        <rect x="6" y="14" width="36" height="26" rx="1"/><path d="M6 22h36M14 14V8h20v6M20 30v6M28 30v6"/>
+      </svg>
+      <h3 class="svc-name">Construcción Comercial</h3>
+      <p class="svc-desc">Oficinas corporativas, locales comerciales y centros de negocio. Espacios que potencian la productividad y representan tu marca.</p>
+    </div>
+    <div class="svc-item fade fade-d2">
+      <p class="svc-num">03 —</p>
+      <svg class="svc-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor">
+        <rect x="4" y="28" width="40" height="14"/><rect x="12" y="14" width="24" height="14"/><path d="M8 8h32M12 8v6M36 8v6"/>
+      </svg>
+      <h3 class="svc-name">Obras Industriales</h3>
+      <p class="svc-desc">Plantas de producción, depósitos y estructuras de gran envergadura. Ingeniería especializada para entornos exigentes.</p>
+    </div>
+    <div class="svc-item fade">
+      <p class="svc-num">04 —</p>
+      <svg class="svc-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor">
+        <path d="M8 40h32M12 40V20l12-10 12 10v20"/><path d="M20 40v-10h8v10"/><circle cx="24" cy="26" r="3"/>
+      </svg>
+      <h3 class="svc-name">Remodelación y Reforma</h3>
+      <p class="svc-desc">Transformamos y modernizamos tus espacios existentes preservando su esencia. Resultados que sorprenden.</p>
+    </div>
+    <div class="svc-item fade fade-d1">
+      <p class="svc-num">05 —</p>
+      <svg class="svc-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor">
+        <rect x="6" y="6" width="36" height="36"/><line x1="6" y1="20" x2="42" y2="20"/><line x1="20" y1="6" x2="20" y2="42"/>
+        <circle cx="33" cy="33" r="4"/><line x1="33" y1="20" x2="33" y2="29"/><line x1="20" y1="33" x2="29" y2="33"/>
+      </svg>
+      <h3 class="svc-name">Diseño de Interiores</h3>
+      <p class="svc-desc">Ambientes que combinan funcionalidad y estética. Cada espacio interior refleja la identidad de quienes lo habitan.</p>
+    </div>
+    <div class="svc-item fade fade-d2">
+      <p class="svc-num">06 —</p>
+      <svg class="svc-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor">
+        <circle cx="24" cy="24" r="16"/><circle cx="24" cy="24" r="5"/>
+        <line x1="24" y1="8" x2="24" y2="19"/><line x1="24" y1="29" x2="24" y2="40"/>
+        <line x1="8" y1="24" x2="19" y2="24"/><line x1="29" y1="24" x2="40" y2="24"/>
+      </svg>
+      <h3 class="svc-name">Ingeniería Estructural</h3>
+      <p class="svc-desc">Cálculo y diseño estructural con software de última generación. Seguridad y durabilidad garantizadas.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section class="projects" id="proyectos">
+  <div class="proj-intro">
+    <div>
+      <p class="section-tag fade">Portfolio</p>
+      <h2 class="section-h fade fade-d1">Obras<br><em>realizadas.</em></h2>
+    </div>
+    <div class="proj-filters fade fade-d2">
+      <button class="pf on" onclick="filt('all',this)">Todos</button>
+      <button class="pf" onclick="filt('res',this)">Residencial</button>
+      <button class="pf" onclick="filt('com',this)">Comercial</button>
+      <button class="pf" onclick="filt('ind',this)">Industrial</button>
+    </div>
+  </div>
+  <div class="proj-main">
+    <div class="proj-row proj-row-1">
+      <div class="proj-card tall" data-c="res">
+        <img class="proj-img" src="https://images.unsplash.com/photo-1600607687939-ce8a6d92f48c?w=1000&q=88&auto=format&fit=crop" alt="Casa Zen"/>
+        <span class="proj-badge">Destacado 2024</span>
+        <div class="proj-meta">
+          <p class="proj-cat">Residencial · 2024</p>
+          <h3 class="proj-name">Casa Zen Patagónica</h3>
+          <p class="proj-loc">San Martín de los Andes, Neuquén</p>
+        </div>
+      </div>
+      <div class="proj-card tall" data-c="com">
+        <img class="proj-img" src="https://images.unsplash.com/photo-1486325212027-8081e485255e?w=800&q=85&auto=format&fit=crop" alt="Torre"/>
+        <div class="proj-meta">
+          <p class="proj-cat">Comercial · 2024</p>
+          <h3 class="proj-name">Torre Corporativa Norte</h3>
+          <p class="proj-loc">Buenos Aires, CABA</p>
+        </div>
+      </div>
+    </div>
+    <div class="proj-row proj-row-2">
+      <div class="proj-card mid" data-c="ind">
+        <img class="proj-img" src="https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?w=800&q=85&auto=format&fit=crop" alt="Planta"/>
+        <div class="proj-meta">
+          <p class="proj-cat">Industrial · 2023</p>
+          <h3 class="proj-name">Planta Logística Sur</h3>
+          <p class="proj-loc">Rosario, Santa Fe</p>
+        </div>
+      </div>
+      <div class="proj-card mid" data-c="res">
+        <img class="proj-img" src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=900&q=85&auto=format&fit=crop" alt="Villa"/>
+        <div class="proj-meta">
+          <p class="proj-cat">Residencial · 2023</p>
+          <h3 class="proj-name">Villa Los Álamos</h3>
+          <p class="proj-loc">Mendoza, Argentina</p>
+        </div>
+      </div>
+    </div>
+    <div class="proj-row proj-row-3">
+      <div class="proj-card short" data-c="com">
+        <img class="proj-img" src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=700&q=85&auto=format&fit=crop" alt="Oficinas"/>
+        <div class="proj-meta">
+          <p class="proj-cat">Comercial · 2022</p>
+          <h3 class="proj-name">Paseo del Puerto</h3>
+          <p class="proj-loc">Mar del Plata</p>
+        </div>
+      </div>
+      <div class="proj-card short" data-c="res">
+        <img class="proj-img" src="https://images.unsplash.com/photo-1449844908441-8829872d2607?w=700&q=85&auto=format&fit=crop" alt="Chalet"/>
+        <div class="proj-meta">
+          <p class="proj-cat">Residencial · 2022</p>
+          <h3 class="proj-name">Chalet Campanario</h3>
+          <p class="proj-loc">Bariloche, Río Negro</p>
+        </div>
+      </div>
+      <div class="proj-card short" data-c="ind">
+        <img class="proj-img" src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=700&q=85&auto=format&fit=crop" alt="Industrial"/>
+        <div class="proj-meta">
+          <p class="proj-cat">Industrial · 2022</p>
+          <h3 class="proj-name">Depósito Central Este</h3>
+          <p class="proj-loc">Córdoba, Argentina</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section class="process" id="proceso">
+  <div class="process-top">
+    <div>
+      <p class="section-tag fade">Cómo Trabajamos</p>
+      <h2 class="section-h fade fade-d1">Nuestro<br><em>proceso.</em></h2>
+    </div>
+    <p class="process-desc fade fade-d2">Un flujo de trabajo probado durante 14 años de práctica continua. Transparencia total en cada etapa, desde la primera reunión hasta la entrega final.</p>
+  </div>
+  <div class="steps">
+    <div class="step fade">
+      <div class="step-line"></div>
+      <div class="step-n">01</div>
+      <h3 class="step-h">Consulta</h3>
+      <p class="step-p">Escuchamos tu visión. Analizamos el sitio, el presupuesto y los objetivos para trazar el camino correcto.</p>
+    </div>
+    <div class="step fade fade-d1">
+      <div class="step-line"></div>
+      <div class="step-n">02</div>
+      <h3 class="step-h">Diseño</h3>
+      <p class="step-p">Planos, renders 3D y presupuesto detallado. Iteramos hasta que la propuesta sea exactamente lo que imaginás.</p>
+    </div>
+    <div class="step fade fade-d2">
+      <div class="step-line"></div>
+      <div class="step-n">03</div>
+      <h3 class="step-h">Construcción</h3>
+      <p class="step-p">Ejecución supervisada con reportes semanales, control de calidad en cada etapa y comunicación constante.</p>
+    </div>
+    <div class="step fade fade-d3">
+      <div class="step-line"></div>
+      <div class="step-n">04</div>
+      <h3 class="step-h">Entrega</h3>
+      <p class="step-p">Recepción de obra con garantía de 5 años. Soporte técnico post-entrega incluido sin costo adicional.</p>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIAL -->
+<section class="testimonial">
+  <div class="test-left">
+    <p class="section-tag fade">Clientes</p>
+    <h2 class="section-h fade fade-d1">Lo que dicen<br><em>de nosotros.</em></h2>
+  </div>
+  <div class="fade fade-d2">
+    <p class="test-q">Zeon House no solo construyó nuestra sede corporativa, construyó el espacio donde nuestro equipo crece cada día. La atención al detalle y la seriedad del proceso superaron todo lo que esperábamos.</p>
+    <div class="test-author">
+      <div class="test-avatar">
+        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&q=80&fit=crop&crop=face" alt="Cliente"/>
+      </div>
+      <div>
+        <p class="test-name">Martín Ferreyra</p>
+        <p class="test-role">Director · Ferreyra &amp; Asociados</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact" id="contacto">
+  <div class="contact-img">
+    <img src="https://images.unsplash.com/photo-1542621334-a254cf47733d?w=900&q=85&auto=format&fit=crop" alt="Obra Zeon"/>
+    <div class="contact-img-text">
+      <h3>Cada gran proyecto<br>comienza con<br>una conversación.</h3>
+      <div class="contact-detail">
+        <div class="cd"><span class="cd-l">Email</span><span class="cd-v">info@zeonhouse.com</span></div>
+        <div class="cd"><span class="cd-l">Teléfono</span><span class="cd-v">+54 299 420 0000</span></div>
+        <div class="cd"><span class="cd-l">Dirección</span><span class="cd-v">Av. Costanera 1240, Neuquén</span></div>
+        <div class="cd"><span class="cd-l">Horario</span><span class="cd-v">Lun–Vie · 8:00 – 18:00</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="contact-form">
+    <p class="section-tag">Hablemos</p>
+    <h2 class="section-h">Iniciá tu<br><em>proyecto.</em></h2>
+    <div class="field-row">
+      <div class="field">
+        <label>Nombre</label>
+        <input type="text" placeholder="Juan García"/>
+      </div>
+      <div class="field">
+        <label>Email</label>
+        <input type="email" placeholder="juan@empresa.com"/>
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>Teléfono</label>
+        <input type="tel" placeholder="+54 299 ..."/>
+      </div>
+      <div class="field">
+        <label>Tipo de proyecto</label>
+        <select>
+          <option value="" disabled selected>Seleccionar...</option>
+          <option>Residencial</option>
+          <option>Comercial</option>
+          <option>Industrial</option>
+          <option>Remodelación</option>
+          <option>Otro</option>
+        </select>
+      </div>
+    </div>
+    <div class="field">
+      <label>Mensaje</label>
+      <textarea placeholder="Contanos sobre tu proyecto, ubicación, plazos estimados..."></textarea>
+    </div>
+    <button class="form-btn">Enviar consulta →</button>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand">Zeon <em>House</em></div>
+  <ul class="footer-links">
+    <li><a href="#nosotros">Filosofía</a></li>
+    <li><a href="#servicios">Servicios</a></li>
+    <li><a href="#proyectos">Proyectos</a></li>
+    <li><a href="#proceso">Proceso</a></li>
+    <li><a href="#contacto">Contacto</a></li>
+  </ul>
+  <p class="footer-copy">© 2025 Zeon House.<br>Todos los derechos reservados.</p>
+</footer>
+
+<script>
+// Cursor
+const cur=document.getElementById('cur');
+let mx=0,my=0;
+document.addEventListener('mousemove',e=>{
+  mx=e.clientX;my=e.clientY;
+  cur.style.left=mx+'px';cur.style.top=my+'px';
+});
+document.querySelectorAll('a,button,.proj-card,.svc-item,.step').forEach(el=>{
+  el.addEventListener('mouseenter',()=>cur.classList.add('big'));
+  el.addEventListener('mouseleave',()=>cur.classList.remove('big'));
+});
+
+// Sticky nav
+const nav=document.getElementById('nav');
+window.addEventListener('scroll',()=>nav.classList.toggle('stuck',scrollY>80));
+
+// Scroll reveal
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in')});
+},{threshold:.1});
+document.querySelectorAll('.fade').forEach(el=>obs.observe(el));
+
+// Project filter
+function filt(cat,btn){
+  document.querySelectorAll('.pf').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  document.querySelectorAll('.proj-card').forEach(c=>{
+    const show=cat==='all'||c.dataset.c===cat;
+    c.style.transition='opacity .4s,transform .4s';
+    c.style.opacity=show?'1':'.15';
+    c.style.transform=show?'scale(1)':'scale(.97)';
+    c.style.pointerEvents=show?'':'none';
+  });
+}
+</script>
+</body>
+</html>
